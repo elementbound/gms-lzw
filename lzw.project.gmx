@@ -12,6 +12,7 @@
     <script>scripts\rtdbg.gml</script>
     <script>scripts\concat.gml</script>
     <script>scripts\_word_str.gml</script>
+    <script>scripts\buffer_shrink.gml</script>
   </scripts>
   <rooms name="rooms">
     <room>rooms\room0</room>
