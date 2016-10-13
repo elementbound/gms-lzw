@@ -154,6 +154,7 @@ rtdbg("Input size: ", buffer_get_size(buff_in), "#",
 // Decompress 
 buffer_delete(buff_in);
 buff_in = buff_out; 
+buffer_seek(buff_in, buffer_seek_start, 0); 
 buff_out = buffer_create(2, buffer_grow, 2);
       
 ds_list_destroy(dictionary);
@@ -168,6 +169,8 @@ while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
         // It's a simple value
         buffer_write(buff_out, buffer_u8, value);
         
+        //rtdbg("Read as-is value: ", chr(value), " ", value);
+        
         // Construct new word
         if(last_type == 1) {
             var new_word = ds_list_create(); 
@@ -175,6 +178,8 @@ while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
             
             ds_list_add(dictionary, new_word); 
             ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+            
+            //rtdbg("Added new word: ", _word_str(new_word));
         }
         else if(last_type == 2) {
             var new_word = ds_list_create(); 
@@ -183,6 +188,8 @@ while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
             
             ds_list_add(dictionary, new_word); 
             ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+            
+            //rtdbg("Added new word: ", _word_str(new_word));
         }
            
         // Save last word
@@ -194,8 +201,12 @@ while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
         word = dictionary[|value - 256];
         
         // Output whole word
-        for(var i = 0; i &lt; ds_list_size(word); i++) 
+        var txt = "";
+        for(var i = 0; i &lt; ds_list_size(word); i++) {
             buffer_write(buff_out, buffer_u8, word[|i]);
+            txt += chr(word[|i]) + " ";
+        }
+        //rtdbg("Read word: ", txt);
             
         // Construct new word
         if(last_type == 1) {
@@ -205,6 +216,8 @@ while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
             
             ds_list_add(dictionary, new_word); 
             ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+            
+            //rtdbg("Added new word: ", _word_str(new_word));
         }
         else if(last_type == 2) {
             var new_word = ds_list_create(); 
@@ -213,6 +226,8 @@ while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
             
             ds_list_add(dictionary, new_word); 
             ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+            
+            //rtdbg("Added new word: ", _word_str(new_word));
         }
             
         // Save last word
