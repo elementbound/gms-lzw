@@ -15,6 +15,8 @@ buffer_write(buff_in, buffer_text, "to+be+or+not+to+be+or");
 buffer_shrink(buff_in);
 buffer_seek(buff_in, buffer_seek_start, 0);
 
+//=============================================================================================
+// Compress
 buff_out = buffer_create(2, buffer_grow, 2);
 
 // TODO: store words in a priority queue sorted by length, so we can start with longest words 
@@ -148,6 +150,99 @@ rtdbg("Input size: ", buffer_get_size(buff_in), "#",
       "Compressed output: #", text, "#",
       dict_text);
       
+//=============================================================================================
+// Decompress 
+buffer_delete(buff_in);
+buff_in = buff_out; 
+buff_out = buffer_create(2, buffer_grow, 2);
+      
+ds_list_destroy(dictionary);
+dictionary = ds_list_create(); 
+last_word = 0;
+last_type = 0; // Nothing 
+
+while(buffer_tell(buff_in) &lt; buffer_get_size(buff_in)) {
+    var value = buffer_read(buff_in, buffer_u16);
+    
+    if(value &lt; 256) {
+        // It's a simple value
+        buffer_write(buff_out, buffer_u8, value);
+        
+        // Construct new word
+        if(last_type == 1) {
+            var new_word = ds_list_create(); 
+            ds_list_add(new_word, last_word, value);
+            
+            ds_list_add(dictionary, new_word); 
+            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        }
+        else if(last_type == 2) {
+            var new_word = ds_list_create(); 
+            ds_list_copy(new_word, last_word);
+            ds_list_add(new_word, value); 
+            
+            ds_list_add(dictionary, new_word); 
+            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        }
+           
+        // Save last word
+        last_word = value; 
+        last_type = 1; // Single value
+    }
+    else {
+        // Fetch from dictionary 
+        word = dictionary[|value - 256];
+        
+        // Output whole word
+        for(var i = 0; i &lt; ds_list_size(word); i++) 
+            buffer_write(buff_out, buffer_u8, word[|i]);
+            
+        // Construct new word
+        if(last_type == 1) {
+            var new_word = ds_list_create(); 
+            ds_list_add(new_word, last_word);
+            ds_list_add(new_word, word[|0]); 
+            
+            ds_list_add(dictionary, new_word); 
+            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        }
+        else if(last_type == 2) {
+            var new_word = ds_list_create(); 
+            ds_list_copy(new_word, last_word);
+            ds_list_add(new_word, word[|0]); 
+            
+            ds_list_add(dictionary, new_word); 
+            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        }
+            
+        // Save last word
+        last_word = word; 
+        last_type = 2; // Whole word 
+    }
+}
+
+buffer_shrink(buff_out); 
+
+// Debug output 
+var text = "";
+
+buffer_seek(buff_out, buffer_seek_start, 0); 
+while(buffer_tell(buff_out) &lt; buffer_get_size(buff_out)) {
+    var value = buffer_read(buff_out, buffer_u8);
+    text += chr(value) + " ";
+}
+
+var dict_text = "Dictionary:#";
+for(var i = 0; i &lt; ds_list_size(dictionary); i++) {
+    dict_text += "    " + _word_str(dictionary[|i]) + "#";
+} 
+
+rtdbg("Input size: ", buffer_get_size(buff_in), "#",
+      "Output size: ", buffer_get_size(buff_out), "#",
+      "Dictionary size: ", ds_list_size(dictionary), "#",
+      "Compressed output: #", text, "#",
+      dict_text);
+
 game_end();</code>
   <enableViews>0</enableViews>
   <clearViewBackground>-1</clearViewBackground>
