@@ -21,7 +21,7 @@ for(var i = 0; i < buffer_get_size(buff_in); i += 0) {
     var match_id = -1;
     var match_length = -1;
     
-    for(var j = 0; j < ds_list_size(dictionary)-1; j++) {
+    for(var j = 0; j < ds_list_size(dictionary); j++) {
         var matched = true; 
         var word = dictionary[|j];
         
@@ -94,6 +94,7 @@ if(shrink_after)
     buffer_shrink(buff_out); 
     
 rtdbg("Input size: ", buffer_get_size(buff_in), "#", "Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
+rtdbg("Dictionary: #", _dictionary_str(dictionary));
     
 ds_list_destroy(dictionary); 
     

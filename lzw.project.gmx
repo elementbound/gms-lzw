@@ -105,6 +105,7 @@
       <scripts name="debug">
         <script>scripts\buffer_bytes_string.gml</script>
         <script>scripts\_word_str.gml</script>
+        <script>scripts\_dictionary_str.gml</script>
       </scripts>
       <script>scripts\buffer_compress_lzw.gml</script>
       <script>scripts\buffer_decompress_lzw.gml</script>

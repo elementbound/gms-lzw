@@ -44,34 +44,59 @@ while(buffer_tell(buff_in) < buffer_get_size(buff_in)) {
         last_type = 1; // Single value
     }
     else {
-        // Fetch from dictionary 
-        word = dictionary[|value - 256];
+        if(value-256 >= ds_list_size(dictionary)) {
+            // New value is fetched from past dictionary
+            // We gotta guess, because the decoder is always one entry behind 
         
-        // Output whole word
-        for(var i = 0; i < ds_list_size(word); i++) 
-            buffer_write(buff_out, buffer_u8, word[|i]);
-            
-        // Construct new word
-        if(last_type == 1) {
-            var new_word = ds_list_create(); 
-            ds_list_add(new_word, last_word);
-            ds_list_add(new_word, word[|0]); 
-            
-            ds_list_add(dictionary, new_word); 
-            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
-        }
-        else if(last_type == 2) {
-            var new_word = ds_list_create(); 
-            ds_list_copy(new_word, last_word);
-            ds_list_add(new_word, word[|0]); 
+            // Create next word as last_word + last_word[0]
+            var new_word = ds_list_create();
+            if(last_type == 1) 
+                ds_list_add(new_word, last_word, last_word); 
+            else if(last_type == 2) {
+                ds_list_copy(new_word, last_word);
+                ds_list_add(new_word, last_word[|0]); 
+            }
             
             ds_list_add(dictionary, new_word); 
             ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
-        }
             
-        // Save last word
-        last_word = word; 
-        last_type = 2; // Whole word 
+            // Output new word
+            for(var i = 0; i < ds_list_size(new_word); i++) 
+                buffer_write(buff_out, buffer_u8, new_word[|i]);
+            
+            last_word = new_word;
+            last_type = 2; // Whole word
+        }
+        else {
+            // Fetch from dictionary 
+            word = dictionary[|value - 256];
+            
+            // Output whole word
+            for(var i = 0; i < ds_list_size(word); i++) 
+                buffer_write(buff_out, buffer_u8, word[|i]);
+                
+            // Construct new word
+            if(last_type == 1) {
+                var new_word = ds_list_create(); 
+                ds_list_add(new_word, last_word);
+                ds_list_add(new_word, word[|0]); 
+                
+                ds_list_add(dictionary, new_word); 
+                ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+            }
+            else if(last_type == 2) {
+                var new_word = ds_list_create(); 
+                ds_list_copy(new_word, last_word);
+                ds_list_add(new_word, word[|0]); 
+                
+                ds_list_add(dictionary, new_word); 
+                ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+            }
+                
+            // Save last word
+            last_word = word; 
+            last_type = 2; // Whole word 
+        }
     }
 }
 
@@ -79,6 +104,7 @@ if(shrink_after)
     buffer_shrink(buff_out); 
     
 rtdbg("Input size: ", buffer_get_size(buff_in), "#", "Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
+rtdbg("Dictionary: #", _dictionary_str(dictionary));
 
 ds_list_destroy(dictionary); 
 

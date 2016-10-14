@@ -101,10 +101,10 @@ else {
         else if(last_type == 2) {
             ds_list_copy(new_word, last_word);
             ds_list_add(new_word, last_word[|0]); 
-            
-            ds_list_add(dictionary, new_word); 
-            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
         }
+        
+        ds_list_add(dictionary, new_word); 
+        ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
         
         // Output new word
         for(var i = 0; i &lt; ds_list_size(new_word); i++) 
