@@ -92,12 +92,15 @@
       <script>scripts\buffer_compress_lzw.gml</script>
       <script>scripts\buffer_decompress_lzw.gml</script>
       <script>scripts\buffer_compress_lzw_async.gml</script>
+      <script>scripts\buffer_decompress_lzw_async.gml</script>
       <script>scripts\buffer_shrink.gml</script>
     </scripts>
   </scripts>
   <objects name="objects">
+    <object>objects\async_demo</object>
     <object>objects\task_g</object>
     <object>objects\task_lzw_compress</object>
+    <object>objects\task_lzw_decompress</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rAsync</room>
