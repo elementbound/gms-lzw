@@ -10,9 +10,12 @@
   <persistent>0</persistent>
   <colour>12632256</colour>
   <showcolour>-1</showcolour>
-  <code>original = buffer_create(1, buffer_grow, 1);
-buffer_write(original, buffer_string, "to be or not to be that is to be or not to be to be to be");
-buffer_shrink(original);
+  <code>global.regularly_last = 0;
+
+original = buffer_load("tex_PlayerEmit3.bmp"); 
+//original = buffer_create(1, buffer_grow, 1);
+//buffer_write(original, buffer_string, "to be or not to be that is to be or not to be to be to be");
+//buffer_shrink(original);
 
 compressed = buffer_compress_lzw(original);
 decompressed = buffer_decompress_lzw(compressed);
@@ -20,8 +23,12 @@ decompressed = buffer_decompress_lzw(compressed);
 buffer_seek(original, buffer_seek_start, 0);
 buffer_seek(decompressed, buffer_seek_start, 0);
 
-rtdbg(buffer_read(original, buffer_string), "#", buffer_read(decompressed, buffer_string));
-rtdbg(buffer_bytes_string(original), "#", buffer_bytes_string(decompressed));
+//rtdbg(buffer_read(original, buffer_string), "#", buffer_read(decompressed, buffer_string));
+//rtdbg(buffer_bytes_string(original), "#", buffer_bytes_string(decompressed));
+
+original_size = buffer_get_size(original);
+compressed_size = buffer_get_size(compressed); 
+rtdbg("Compression ratio: ", (compressed_size/original_size)*100, "%#", original_size, " -&gt; ", compressed_size);
 
 game_end();</code>
   <enableViews>0</enableViews>
