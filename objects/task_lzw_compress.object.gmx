@@ -124,7 +124,7 @@ if(stage == st_prematch) {
             <kind>1</kind>
             <string>/// Match
 if(stage == st_match) {
-    if(j &gt;= ds_list_size(dictionary)) {
+    if(j &gt;= ds_list_size(dictionary) - 1) {
         stage++;
         exit;
     }

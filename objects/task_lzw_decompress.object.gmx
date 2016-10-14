@@ -57,8 +57,11 @@ ds_list_destroy(dictionary);
             <string>/// Work
 if(buffer_tell(buff_in) &gt;= buffer_get_size(buff_in)) {
     done = true;
+    progress = 1; 
     exit; 
 }
+
+progress = buffer_tell(buff_in) / buffer_get_size(buff_in);
 
 var value = buffer_read(buff_in, buffer_u16);
 
