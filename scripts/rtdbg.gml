@@ -4,5 +4,5 @@ str="";
 for(__=0; __<argument_count; __++)
     str+=string(argument[__]);
     
-//show_error(str, false);
+//show_error(string_replace_all(str, "#", chr(10)), false);
 show_message(str); 

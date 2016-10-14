@@ -5,7 +5,7 @@ var buff_in = argument[0];
 if(argument_count > 1)
     var buff_out = argument[1];
 else {
-    buff_out = buffer_create(2, buffer_grow, 2);
+    buff_out = buffer_create(1, buffer_grow, 1);
     shrink_after = true; 
 }
 
@@ -78,7 +78,7 @@ while(buffer_tell(buff_in) < buffer_get_size(buff_in)) {
 if(shrink_after)
     buffer_shrink(buff_out); 
     
-rtdbg("Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
+rtdbg("Input size: ", buffer_get_size(buff_in), "#", "Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
 
 ds_list_destroy(dictionary); 
 

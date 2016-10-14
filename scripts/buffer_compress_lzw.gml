@@ -93,7 +93,7 @@ for(var i = 0; i < buffer_get_size(buff_in); i += 0) {
 if(shrink_after)
     buffer_shrink(buff_out); 
     
-rtdbg("Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
+rtdbg("Input size: ", buffer_get_size(buff_in), "#", "Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
     
 ds_list_destroy(dictionary); 
     
