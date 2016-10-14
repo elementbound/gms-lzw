@@ -8,6 +8,36 @@
   <parentName>task_g</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
+    <event eventtype="0" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>event_inherited();
+
+var i = 0;
+st_prematch = i++;
+st_match = i++;
+st_postmatch = i++;
+
+stage = st_prematch; 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="7" enumb="12">
       <action>
         <libid>1</libid>
@@ -53,25 +83,62 @@ ds_list_destroy(dictionary);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Work
-if(i &gt;= buffer_get_size(buff_in)) {
-    done = true;
+            <string>/// Prematch
+if(stage == st_prematch) {
+    if(i &gt;= buffer_get_size(buff_in)) {
+        done = true;
+        exit;
+    }
+    
+    progress = i / buffer_get_size(buff_in); 
+    
+    // Find longest match 
+    match_id = -1;
+    match_length = -1;
+    
+    j = 0;
+    
+    stage++;
+    
     exit;
 }
-
-progress = i / buffer_get_size(buff_in); 
-
-// Find longest match 
-var match_id = -1;
-var match_length = -1;
-
-for(var j = 0; j &lt; ds_list_size(dictionary); j++) {
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Match
+if(stage == st_match) {
+    if(j &gt;= ds_list_size(dictionary)) {
+        stage++;
+        exit;
+    }
+    
     var matched = true; 
     var word = dictionary[|j];
     
     // Word longer than remaining input
-    if(i + ds_list_size(word) &gt;= buffer_get_size(buff_in))
-        continue;
+    if(i + ds_list_size(word) &gt;= buffer_get_size(buff_in)) {
+        // continue; 
+        
+        j++;
+        exit; 
+    }
         
     // Check for match
     buffer_seek(buff_in, buffer_seek_start, i); 
@@ -88,49 +155,80 @@ for(var j = 0; j &lt; ds_list_size(dictionary); j++) {
         match_id = j;
         match_length = ds_list_size(word); 
     }
-}
+    
+    j++;
 
-if(match_id &gt;= 0) {
-    // Output dict ref if matched
-    buffer_write(buff_out, buffer_u16, match_id+256);
-    
-    // Seek buffer, multiple bytes consumed
-    i += match_length; 
-    buffer_seek(buff_in, buffer_seek_start, i);
-    
-    // Add new word 
-    // ( if we don't overrun the dictionary AND there's an additional byte to read )
-    if(ds_list_size(dictionary) &lt; max_dict_size &amp;&amp; i+1 &lt; buffer_get_size(buff_in)) {
-        var match_word = dictionary[|match_id];
-        var new_word = ds_list_create();
-        
-        ds_list_copy(new_word, match_word); 
-        ds_list_add(new_word, buffer_read(buff_in, buffer_u8));
-        
-        ds_list_add(dictionary, new_word); 
-        ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
-    }
+    exit;
 }
-else {
-    // Otherwise output character as-is 
-    // Seek buffer
-    buffer_seek(buff_in, buffer_seek_start, i);
-    
-    var byte = buffer_read(buff_in, buffer_u8);
-    buffer_write(buff_out, buffer_u16, byte);
-    
-    // Add new word 
-    // ( if we don't overrun the dictionary AND there's an additional byte to read )
-    if(ds_list_size(dictionary) &lt; max_dict_size &amp;&amp; i+1 &lt; buffer_get_size(buff_in)) {
-        var new_word = ds_list_create();
-        ds_list_add(new_word, byte, buffer_read(buff_in, buffer_u8)); 
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Postmatch
+if(stage == st_postmatch) {
+    if(match_id &gt;= 0) {
+        // Output dict ref if matched
+        buffer_write(buff_out, buffer_u16, match_id+256);
         
-        ds_list_add(dictionary, new_word);
-        ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        // Seek buffer, multiple bytes consumed
+        i += match_length; 
+        buffer_seek(buff_in, buffer_seek_start, i);
+        
+        // Add new word 
+        // ( if we don't overrun the dictionary AND there's an additional byte to read )
+        if(ds_list_size(dictionary) &lt; max_dict_size &amp;&amp; i+1 &lt; buffer_get_size(buff_in)) {
+            var match_word = dictionary[|match_id];
+            var new_word = ds_list_create();
+            
+            ds_list_copy(new_word, match_word); 
+            ds_list_add(new_word, buffer_read(buff_in, buffer_u8));
+            
+            ds_list_add(dictionary, new_word); 
+            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        }
     }
+    else {
+        // Otherwise output character as-is 
+        // Seek buffer
+        buffer_seek(buff_in, buffer_seek_start, i);
+        
+        var byte = buffer_read(buff_in, buffer_u8);
+        buffer_write(buff_out, buffer_u16, byte);
+        
+        // Add new word 
+        // ( if we don't overrun the dictionary AND there's an additional byte to read )
+        if(ds_list_size(dictionary) &lt; max_dict_size &amp;&amp; i+1 &lt; buffer_get_size(buff_in)) {
+            var new_word = ds_list_create();
+            ds_list_add(new_word, byte, buffer_read(buff_in, buffer_u8)); 
+            
+            ds_list_add(dictionary, new_word);
+            ds_list_mark_as_list(dictionary, ds_list_size(dictionary)-1); 
+        }
+        
+        // Single byte consumed
+        i++;
+    }
+
+    // Reset stage
+    stage = 0;
     
-    // Single byte consumed
-    i++;
+    exit;
 }
 </string>
           </argument>
@@ -190,7 +288,7 @@ i = 0;
 if(done)
     expected_size = buffer_get_size(buff_out); 
 
-var txt = concat(object_get_name(object_index), "#",
+var txt = concat("FPS: ", fps, "##",object_get_name(object_index), "#",
                  "Progress: ", progress*100, "%", "#",
                  "Done: ", done, "#",
                  "Expected size: ", expected_size, "#",
