@@ -45,17 +45,29 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
-    <script>scripts\rtdbg.gml</script>
-    <script>scripts\concat.gml</script>
-    <script>scripts\_word_str.gml</script>
-    <script>scripts\buffer_shrink.gml</script>
-    <script>scripts\buffer_compress_lzw.gml</script>
-    <script>scripts\buffer_decompress_lzw.gml</script>
-    <script>scripts\buffer_bytes_string.gml</script>
-    <script>scripts\regularly.gml</script>
+    <scripts name="utils">
+      <script>scripts\rtdbg.gml</script>
+      <script>scripts\concat.gml</script>
+      <script>scripts\regularly.gml</script>
+    </scripts>
+    <scripts name="lzw">
+      <scripts name="debug">
+        <script>scripts\buffer_bytes_string.gml</script>
+        <script>scripts\_word_str.gml</script>
+      </scripts>
+      <script>scripts\buffer_compress_lzw.gml</script>
+      <script>scripts\buffer_decompress_lzw.gml</script>
+      <script>scripts\buffer_compress_lzw_async.gml</script>
+      <script>scripts\buffer_shrink.gml</script>
+    </scripts>
   </scripts>
+  <objects name="objects">
+    <object>objects\task_g</object>
+    <object>objects\task_lzw_compress</object>
+  </objects>
   <rooms name="rooms">
-    <room>rooms\room0</room>
+    <room>rooms\rAsync</room>
+    <room>rooms\rSync</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

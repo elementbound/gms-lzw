@@ -5,7 +5,7 @@ var buff_in = argument[0];
 if(argument_count > 1)
     var buff_out = argument[1];
 else {
-    buff_out = buffer_create(2, buffer_grow, 2);
+    var buff_out = buffer_create(2, buffer_grow, 2);
     shrink_after = true; 
 }
 
