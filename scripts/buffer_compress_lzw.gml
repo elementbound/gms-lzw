@@ -17,14 +17,11 @@ var dictionary = ds_list_create();
 var max_dict_size = 65536 - 256;
 
 for(var i = 0; i < buffer_get_size(buff_in); i += 0) {
-    if(regularly(500)) 
-        rtdbg("Compress: ", (i/buffer_get_size(buff_in))*100, "%");
-
     // Find longest match 
     var match_id = -1;
     var match_length = -1;
     
-    for(var j = 0; j < ds_list_size(dictionary); j++) {
+    for(var j = 0; j < ds_list_size(dictionary)-1; j++) {
         var matched = true; 
         var word = dictionary[|j];
         

@@ -87,6 +87,7 @@ ds_list_destroy(dictionary);
 if(stage == st_prematch) {
     if(i &gt;= buffer_get_size(buff_in)) {
         done = true;
+        progress = 1;
         exit;
     }
     
@@ -226,7 +227,7 @@ if(stage == st_postmatch) {
     }
 
     // Reset stage
-    stage = 0;
+    stage = st_prematch;
     
     exit;
 }

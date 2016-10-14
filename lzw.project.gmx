@@ -121,8 +121,8 @@
     <object>objects\task_lzw_decompress</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\rAsync</room>
     <room>rooms\rSync</room>
+    <room>rooms\rAsync</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

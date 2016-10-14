@@ -16,9 +16,6 @@ var last_word = 0;
 var last_type = 0; // Nothing 
 
 while(buffer_tell(buff_in) < buffer_get_size(buff_in)) {
-    if(regularly(500)) 
-        rtdbg("Decompress: ", (buffer_tell(buff_in)/buffer_get_size(buff_in))*100, "%");
-        
     var value = buffer_read(buff_in, buffer_u16);
     
     if(value < 256) {
