@@ -111,6 +111,7 @@
       <script>scripts\buffer_compress_lzw_async.gml</script>
       <script>scripts\buffer_decompress_lzw_async.gml</script>
       <script>scripts\buffer_shrink.gml</script>
+      <script>scripts\buffer_compare.gml</script>
     </scripts>
   </scripts>
   <objects name="objects">
