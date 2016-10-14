@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>original = buffer_load("tex_PlayerEmit3.bmp");
+            <string>original = buffer_load("simple.bmp");
 
 task = buffer_compress_lzw_async(original);
 alarm[0] = 1;

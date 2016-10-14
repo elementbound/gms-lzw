@@ -88,8 +88,12 @@ if(value &lt; 256) {
     last_type = 1; // Single value
 }
 else {
+    if(value-256 &gt;= ds_list_size(dictionary)) {
+        show_error(concat("Fetch from past dictionary: ", value-256, " / ", ds_list_size(dictionary)), true);
+    }
+
     // Fetch from dictionary 
-    word = dictionary[|value - 256];
+    var word = dictionary[|value - 256];
     
     // Output whole word
     for(var i = 0; i &lt; ds_list_size(word); i++) 
