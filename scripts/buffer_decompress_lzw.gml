@@ -102,9 +102,6 @@ while(buffer_tell(buff_in) < buffer_get_size(buff_in)) {
 
 if(shrink_after)
     buffer_shrink(buff_out); 
-    
-rtdbg("Input size: ", buffer_get_size(buff_in), "#", "Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
-rtdbg("Dictionary: #", _dictionary_str(dictionary));
 
 ds_list_destroy(dictionary); 
 

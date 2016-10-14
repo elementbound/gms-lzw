@@ -25,10 +25,10 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//original = buffer_load("simple.bmp");
-original = buffer_create(1, buffer_grow, 1);
-buffer_write(original, buffer_string, "aaaaaaaabbbbbbbb");
-buffer_shrink(original); 
+            <string>original = buffer_load("mt-hipster-tiny.bmp");
+
+compress_time = 0;
+decompress_time = 0; 
 
 task = buffer_compress_lzw_async(original);
 alarm[0] = 1;
@@ -55,11 +55,13 @@ alarm[0] = 1;
           <argument>
             <kind>1</kind>
             <string>/// Wait for decompress to finish
+decompress_time = task.time; 
+
 if(task.done) {
     if(!buffer_compare(original, task.buff_out))
         rtdbg("Buffer mismatch!");
     
-    rtdbg(buffer_bytes_string(original), "#", buffer_bytes_string(task.buff_out));
+    //rtdbg(buffer_bytes_string(original), "#", buffer_bytes_string(task.buff_out));
 }
 else {
     alarm[1] = 1; 
@@ -87,6 +89,8 @@ else {
           <argument>
             <kind>1</kind>
             <string>/// Wait for compress to finish
+compress_time = task.time; 
+
 if(task.done) {
     buffer = task.buff_out;
     with(task)
@@ -98,6 +102,33 @@ if(task.done) {
 else {
     alarm[0] = 1;
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>draw_set_valign(fa_bottom);
+
+draw_text(0, room_height, concat("Compress: ", compress_time, "#", "Decompress: ", decompress_time));
+
+draw_set_valign(fa_top);
 </string>
           </argument>
         </arguments>

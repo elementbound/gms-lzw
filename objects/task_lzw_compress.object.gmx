@@ -57,9 +57,7 @@ stage = st_prematch;
             <kind>1</kind>
             <string>if(shrink_after)
     buffer_shrink(buff_out); 
-    
-rtdbg("Input size: ", buffer_get_size(buff_in), "#", "Output size: ", buffer_get_size(buff_out), "#", "Dictionary size: ", ds_list_size(dictionary));
-    
+  
 ds_list_destroy(dictionary); 
 </string>
           </argument>
@@ -292,6 +290,7 @@ if(done)
 var txt = concat("FPS: ", fps, "##",object_get_name(object_index), "#",
                  "Progress: ", progress*100, "%", "#",
                  "Done: ", done, "#",
+                 "Time: ", lerp((get_timer()/1000 - start_time), (end_time - start_time), done), " ms#", 
                  "Expected size: ", expected_size, "#",
                  "Compression ratio: ", (expected_size/buffer_get_size(buff_in))*100, "%", "#");
                  

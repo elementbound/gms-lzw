@@ -40,9 +40,11 @@ ev_init = i++;
 ev_work = i++;
 ev_deinit = i++;
 
-rtdbg("Events: ", ev_init, ", ", ev_work, ", ", ev_deinit);
-
 _to_init = true; 
+
+start_time = 0;
+end_time = 0;
+time = 0;
 </string>
           </argument>
         </arguments>
@@ -69,6 +71,7 @@ _to_init = true;
     exit; 
 
 if(_to_init) {
+    start_time = get_timer()/1000;
     event_user(ev_init);
     _to_init = false; 
 }
@@ -82,8 +85,14 @@ while(get_timer()/1000 &lt; work_till) {
     event_user(ev_work);
 }
 
-if(done)
+time = get_timer()/1000 - start_time;
+
+if(done) {
     event_user(ev_deinit); 
+    end_time = get_timer()/1000;  
+    
+    time = end_time - start_time;  
+}
 </string>
           </argument>
         </arguments>
@@ -177,7 +186,8 @@ if(done)
             <kind>1</kind>
             <string>var txt = concat(object_get_name(object_index), "#",
                  "Progress: ", progress*100, "%", "#",
-                 "Done: ", done);
+                 "Done: ", done, "#",
+                 "Time: ", time, " ms#");
                  
 draw_text(2,2, txt); 
 </string>
