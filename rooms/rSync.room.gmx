@@ -14,7 +14,7 @@
 
 //original = buffer_load("tex_PlayerEmit3.bmp"); 
 original = buffer_create(1, buffer_grow, 1);
-buffer_write(original, buffer_string, "aaaaaaaabbbbbbbb");
+buffer_write(original, buffer_string, "to be or not to be to be not to");
 buffer_shrink(original);
 
 compressed = buffer_compress_lzw(original);
@@ -25,6 +25,11 @@ if(!buffer_compare(original, decompressed))
 
 buffer_seek(original, buffer_seek_start, 0);
 buffer_seek(decompressed, buffer_seek_start, 0);
+
+// Copy compressed to 1-aligned buffer
+// cpr = buffer_create(buffer_get_size(compressed), buffer_fixed, 1);
+// buffer_copy(compressed, 0, buffer_get_size(compressed), cpr, 0);
+// rtdbg("Compressed: #", buffer_bytes_string(cpr));
 
 rtdbg(buffer_read(original, buffer_string), "#", buffer_read(decompressed, buffer_string));
 rtdbg(buffer_bytes_string(original), "#", buffer_bytes_string(decompressed));

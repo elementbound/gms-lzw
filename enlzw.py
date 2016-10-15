@@ -34,7 +34,7 @@ def progressbar(percent, width = 80):
 def lzw_encode_into(buff_in, buff_out):
 	dictionary = []
 	MAX_DICT_SIZE = 65536 - 256
-	byteorder = 'big'
+	byteorder = 'little'
 	
 	regularly = timer()
 	
@@ -96,7 +96,7 @@ def lzw_encode_into(buff_in, buff_out):
 			i += len(dictionary[match_id])
 	
 def lzw_encode(buffer):
-	buff_out = bytes()
+	buff_out = bytearray()
 	lzw_encode_into(buffer, buff_out)
 	return buff_out
 	
@@ -113,9 +113,12 @@ def main():
 	with open(filename, 'rb') as f:
 		buffer = f.read()
 		
+	buffer = "to be or not to be to be not to".encode('ascii')
+		
 	# Compress or something 
 	result = lzw_encode(buffer)
 		
+	print("Result bytes: \n", [x for x in result])
 	
 if __name__ == "__main__":
 	main()
