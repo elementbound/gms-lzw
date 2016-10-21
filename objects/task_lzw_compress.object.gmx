@@ -269,7 +269,7 @@ buffer_seek(buff_in, buffer_seek_start, 0);
 // TODO: this is questionable tho 
 dictionary = ds_list_create(); 
 max_dict_size = 65536 - 256;
-clear_at = 4096;
+clear_at = 4096 - 257;
 
 // Work-loop
 i = 0;

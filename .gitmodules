@@ -1,0 +1,3 @@
+[submodule "LZW"]
+	path = LZW
+	url = https://github.com/radekstepan/LZW.git
