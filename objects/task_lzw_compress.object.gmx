@@ -55,7 +55,9 @@ stage = st_prematch;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(shrink_after)
+            <string>/// Done
+
+if(shrink_after)
     buffer_shrink(buff_out); 
   
 ds_list_destroy(dictionary); 
@@ -183,7 +185,7 @@ if(stage == st_match) {
 if(stage == st_postmatch) {
     if(match_id &gt;= 0) {
         // Output dict ref if matched
-        buffer_write(buff_out, buffer_u16, match_id+256);
+        buffer_write(buff_out, buffer_u16, match_id+257);
         
         // Seek buffer, multiple bytes consumed
         i += match_length; 
@@ -223,6 +225,15 @@ if(stage == st_postmatch) {
         // Single byte consumed
         i++;
     }
+    
+    if(ds_list_size(dictionary) &gt; clear_at) {
+        // Output clear sign 
+        buffer_write(buff_out, buffer_u16, 256);
+        
+        // Clear dictionary 
+        ds_list_destroy(dictionary);
+        dictionary = ds_list_create(); 
+    }
 
     // Reset stage
     stage = st_prematch;
@@ -258,6 +269,7 @@ buffer_seek(buff_in, buffer_seek_start, 0);
 // TODO: this is questionable tho 
 dictionary = ds_list_create(); 
 max_dict_size = 65536 - 256;
+clear_at = 4096;
 
 // Work-loop
 i = 0;

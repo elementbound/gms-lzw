@@ -88,10 +88,17 @@ if(value &lt; 256) {
     last_word = value; 
     last_type = 1; // Single value
 }
+else if(value == 256) {
+    // Clear sign
+    ds_list_destroy(dictionary);
+    dictionary = ds_list_create(); 
+    
+    last_type = 0;
+}
 else {
     // New value is fetched from past dictionary
     // We gotta guess, because the decoder is always one entry behind 
-    if(value-256 &gt;= ds_list_size(dictionary)) {
+    if(value-257 &gt;= ds_list_size(dictionary)) {
         // Create next word as last_word + last_word[0]
         var new_word = ds_list_create();
         if(last_type == 1)
@@ -113,7 +120,7 @@ else {
     }
     else {
         // Fetch from dictionary 
-        var word = dictionary[|value - 256];
+        var word = dictionary[|value - 257];
         
         // Output whole word
         for(var i = 0; i &lt; ds_list_size(word); i++) 
