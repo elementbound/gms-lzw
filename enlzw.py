@@ -2,6 +2,8 @@ import sys
 import os 
 from time import sleep, clock  
 
+import cProfile 
+
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
@@ -113,12 +115,8 @@ def main():
 	with open(filename, 'rb') as f:
 		buffer = f.read()
 		
-	buffer = "to be or not to be to be not to".encode('ascii')
-		
 	# Compress or something 
 	result = lzw_encode(buffer)
-		
-	print("Result bytes: \n", [x for x in result])
 	
 if __name__ == "__main__":
 	main()
